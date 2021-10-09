@@ -22,7 +22,10 @@ jobs:
   
   upload:
     needs: test
-    runs-on: [windows-latest, ubuntu-latest, macos-latest]
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+    runs-on: {{matrix.os}}
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
@@ -35,7 +38,7 @@ jobs:
     - name: Upload build artifact
       uses: actions/upload-artifact@v2
       with:
-        name: Build-${{env.RUNNER_OS}}
+        name: Build for ${{matrix.os}}
         path: dist
 
     
