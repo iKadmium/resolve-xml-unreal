@@ -2,7 +2,7 @@ name: Run a nightly build
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   publish:
@@ -23,7 +23,8 @@ jobs:
     - name: Build (.net)
       run: dotnet build ResolveXmlUnreal/ResolveXmlUnreal.csproj -c Release -o dist/net
     
-    - uses: actions/upload-artifact@v2
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v2
       with:
         name: Build
         path: dist/net
