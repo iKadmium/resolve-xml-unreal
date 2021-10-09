@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 jobs:
-  publish:
+  test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -19,14 +19,22 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal --settings coverlet.runsettings
-    
+  
+  upload:
+    needs: test
+    runs-on: [ windows-latest, ubuntu-latest, macos-latest ]
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
     - name: Build (.net)
-      run: dotnet build ResolveXmlUnreal/ResolveXmlUnreal.csproj -c Release -o dist/net
+      run: dotnet build ResolveXmlUnreal/ResolveXmlUnreal.csproj -c Release -o dist
     
     - name: Upload build artifact
       uses: actions/upload-artifact@v2
       with:
-        name: Build
-        path: dist/net
+        name: Build-${{RUNNER_OS}}
+        path: dist
 
     
